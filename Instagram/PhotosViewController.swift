@@ -9,10 +9,17 @@
 import UIKit
 
 class PhotosViewController: UIViewController {
+    
+    private var photosApp: PhotosApp?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        self.photosApp = PhotosApp()
+        self.photosApp?.retrievePhotos({() -> () in
+            print(self.photosApp!.photos![0]["id"])
+        })
     }
 
     override func didReceiveMemoryWarning() {
