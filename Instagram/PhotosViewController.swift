@@ -33,9 +33,8 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("com.lyft.PhotoTableViewCell", forIndexPath: indexPath) as! PhotoTableViewCell
         let index = indexPath.row
-        print(index)
         let photos = photosApp!.photos
-        if(photosApp!.photos != nil) {
+        if (photos != nil) {
             print(photos![index]["id"])
             let photo = self.photosApp!.photos![index] as! NSDictionary
             let urlString = photo.valueForKeyPath("images.low_resolution.url") as! String
@@ -46,7 +45,12 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        let photos = photosApp!.photos
+        if (photos != nil) {
+            return photos!.count
+        } else {
+            return 0
+        }
     }
 
     override func didReceiveMemoryWarning() {
