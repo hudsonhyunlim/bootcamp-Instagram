@@ -40,8 +40,8 @@ public final class PhotosApp {
         task.resume()
     }
     
-    public func getPhoto(index: Int) -> NSDictionary {
-        return self.photos[index] as! NSDictionary
+    public func getPhoto(index: Int) -> Photo {
+        return Photo(photoDict: self.photos[index] as! NSDictionary)
     }
     
     public func getPhotoListSize() -> Int {

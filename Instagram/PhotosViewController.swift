@@ -39,9 +39,8 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let cell = tableView.dequeueReusableCellWithIdentifier("com.lyft.PhotoTableViewCell", forIndexPath: indexPath) as! PhotoTableViewCell
         let index = indexPath.row
         let photo = photosApp?.getPhoto(index)
-        let urlString = photo!.valueForKeyPath("images.low_resolution.url") as! String
-        let url = NSURL(string: urlString)
-        cell.photoImageView.setImageWithURL(url!)
+        
+        cell.photoImageView.setImageWithURL(photo!.url)
         return cell
     }
     
