@@ -54,6 +54,14 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
             refreshControl.endRefreshing()
         })
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
+        let vc = segue.destinationViewController as! PhotoDetailsViewController
+        let indexPath = self.photosTableView.indexPathForCell(sender as! UITableViewCell)! as NSIndexPath
+        let photo = photosApp?.getPhoto(indexPath.row)
+        vc.setPhoto(photo!)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
