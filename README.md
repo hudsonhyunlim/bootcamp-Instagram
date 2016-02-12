@@ -2,14 +2,14 @@
 
 Instagram thing is an Instagram client.
 
-Time spent: 2.5 hours spent in total
+Time spent: 4 hours spent in total
 
 ## Milestones
 
 - [x] Milestone 1: Setup
 - [x] Milestone 2: Hookup the Instagram API
 - [x] Milestone 3: Build the Main Photo Feed
-- [ ] Milestone 4: Build the Details Screen
+- [x] Milestone 4: Build the Details Screen
 - [x] Milestone 5: Add Pull to Refresh
 - [ ] Bonus 1: Add User Profile Image and Names
 - [ ] Bonus 2: Infinite Scrolling
