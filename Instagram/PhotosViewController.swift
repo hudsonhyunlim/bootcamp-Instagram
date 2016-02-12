@@ -23,9 +23,14 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.photosTableView.delegate = self
         self.photosTableView.rowHeight = 320
         
+        // attach refresh
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: "refreshControlAction:", forControlEvents: UIControlEvents.ValueChanged)
+        self.photosTableView.insertSubview(refreshControl, atIndex: 0)
+        
+        // init app
         self.photosApp = PhotosApp()
         self.photosApp?.retrievePhotos({() -> () in
-            print(self.photosApp!.photos![0]["id"])
             self.photosTableView.reloadData()
         })
     }
@@ -35,7 +40,6 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let index = indexPath.row
         let photos = photosApp!.photos
         if (photos != nil) {
-            print(photos![index]["id"])
             let photo = self.photosApp!.photos![index] as! NSDictionary
             let urlString = photo.valueForKeyPath("images.low_resolution.url") as! String
             let url = NSURL(string: urlString)
@@ -52,10 +56,18 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
             return 0
         }
     }
+    
+    func refreshControlAction(refreshControl: UIRefreshControl) {
+        self.photosApp?.retrievePhotos({() -> () in
+            self.photosTableView.reloadData()
+            refreshControl.endRefreshing()
+        })
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        // TODO: do I need to clean anything up?
     }
 
 
