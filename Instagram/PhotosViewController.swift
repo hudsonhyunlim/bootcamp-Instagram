@@ -38,23 +38,15 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("com.lyft.PhotoTableViewCell", forIndexPath: indexPath) as! PhotoTableViewCell
         let index = indexPath.row
-        let photos = photosApp!.photos
-        if (photos != nil) {
-            let photo = self.photosApp!.photos![index] as! NSDictionary
-            let urlString = photo.valueForKeyPath("images.low_resolution.url") as! String
-            let url = NSURL(string: urlString)
-            cell.photoImageView.setImageWithURL(url!)
-        }
+        let photo = photosApp?.getPhoto(index)
+        let urlString = photo!.valueForKeyPath("images.low_resolution.url") as! String
+        let url = NSURL(string: urlString)
+        cell.photoImageView.setImageWithURL(url!)
         return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let photos = photosApp!.photos
-        if (photos != nil) {
-            return photos!.count
-        } else {
-            return 0
-        }
+        return (photosApp?.getPhotoListSize())!
     }
     
     func refreshControlAction(refreshControl: UIRefreshControl) {
