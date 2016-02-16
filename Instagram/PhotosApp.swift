@@ -13,12 +13,40 @@ public final class PhotosApp {
     private let CLIENT_ID = "e05c462ebd86446ea48a5af73769b602"
     
     public var photos:NSArray
+    public var isDataLoading = false
     
     init () {
-        self.photos = NSArray()
+        self.photos = []
     }
     
-    public func retrievePhotos(completion: ()->()) {
+    public func resetPhotos(completion: (success: Bool)->()) {
+        if (self.isDataLoading) {
+            completion(success: false)
+        } else {
+            self.retrievePhotos({ (photos: NSArray)->() in
+                if (photos.count > 0) {
+                    self.photos = photos
+                }
+                completion(success: true)
+            })
+        }
+    }
+    
+    public func getMorePhotos(completion: (success: Bool)->()) {
+        if (self.isDataLoading) {
+            completion(success: false)
+        } else {
+            self.retrievePhotos({ (photos: NSArray)->() in
+                if (photos.count > 0) {
+                    self.photos = self.photos.arrayByAddingObjectsFromArray(photos as [AnyObject])
+                }
+                completion(success: true)
+            })
+        }
+    }
+    
+    private func retrievePhotos(completion: (photos: NSArray)->()) {
+        self.isDataLoading = true
         let url = NSURL(string:"https://api.instagram.com/v1/media/popular?client_id=\(self.CLIENT_ID)")
         let request = NSURLRequest(URL: url!)
         let session = NSURLSession(
@@ -32,8 +60,9 @@ public final class PhotosApp {
                 if let data = dataOrNil {
                     if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                         data, options:[]) as? NSDictionary {
-                            self.photos = responseDictionary["data"] as! NSArray
-                            completion()
+                            let photos = responseDictionary["data"] as! NSArray
+                            self.isDataLoading = false
+                            completion(photos: photos)
                     }
                 }
         });

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
     
     private var photosApp: PhotosApp?
 
@@ -30,7 +30,7 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         // init app
         self.photosApp = PhotosApp()
-        self.photosApp?.retrievePhotos({() -> () in
+        self.photosApp?.resetPhotos({(success: Bool) -> () in
             self.photosTableView.reloadData()
         })
     }
@@ -48,8 +48,23 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return (photosApp?.getPhotoListSize())!
     }
     
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        let scrollViewContentHeight = self.photosTableView.contentSize.height
+        let scrollOffsetThreshold = scrollViewContentHeight - self.photosTableView.bounds.size.height
+        
+        // When the user has scrolled past the threshold, start requesting
+        if(scrollView.contentOffset.y > scrollOffsetThreshold && self.photosTableView.dragging) {
+            self.photosApp?.getMorePhotos({(success: Bool) -> () in
+                if(success) {
+                    print("yo")
+                    self.photosTableView.reloadData()
+                }
+            })
+        }
+    }
+    
     func refreshControlAction(refreshControl: UIRefreshControl) {
-        self.photosApp?.retrievePhotos({() -> () in
+        self.photosApp?.resetPhotos({(success: Bool) -> () in
             self.photosTableView.reloadData()
             refreshControl.endRefreshing()
         })
