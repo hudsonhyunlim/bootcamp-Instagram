@@ -54,12 +54,20 @@ class PhotosViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         // When the user has scrolled past the threshold, start requesting
         if(scrollView.contentOffset.y > scrollOffsetThreshold && self.photosTableView.dragging) {
-            self.photosApp?.getMorePhotos({(success: Bool) -> () in
-                if(success) {
-                    print("yo")
-                    self.photosTableView.reloadData()
-                }
-            })
+            if((self.photosApp?.isDataLoading) == false) {
+                let tableFooterView: UIView = UIView(frame: CGRectMake(0, 0, 320, 50))
+                let loadingView: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+                loadingView.startAnimating()
+                loadingView.center = tableFooterView.center
+                tableFooterView.addSubview(loadingView)
+                self.photosTableView.tableFooterView = tableFooterView
+                self.photosApp?.getMorePhotos({(success: Bool) -> () in
+                    if(success) {
+                        loadingView.stopAnimating()
+                        self.photosTableView.reloadData()
+                    }
+                })
+            }
         }
     }
     
